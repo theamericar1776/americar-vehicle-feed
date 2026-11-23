@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.Python
+data/inventory.json
+out/
+inv.html
+vdp.html
