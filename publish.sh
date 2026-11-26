@@ -33,6 +33,14 @@ n = len(root.findall(".//item"))
 print(f"parsed_items={n}")
 if n < 5:
     sys.exit(f"Refusing to publish: only {n} vehicles (need >= 5)")
+ns = "http://base.google.com/ns/1.0"
+missing_lt = []
+for item in root.findall(".//item"):
+    lt = item.findtext(f"{{{ns}}}link_template") or ""
+    if "{store_code}" not in lt or not lt.startswith("http"):
+        missing_lt.append(item.findtext(f"{{{ns}}}id") or "?")
+if missing_lt:
+    sys.exit(f"Missing or invalid link_template on {len(missing_lt)} items: {', '.join(missing_lt[:5])}")
 open("/tmp/americar-feed-item-count", "w").write(str(n))
 PY
 

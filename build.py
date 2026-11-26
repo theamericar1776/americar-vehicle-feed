@@ -36,9 +36,9 @@ def validate(c,live_check=False):
         try: urllib.request.urlopen(urllib.request.Request(c["images"][0],method="HEAD"),timeout=15)
         except Exception as x: e.append(f"main image unreachable: {x}")
     return e,w
-COLS=["id","store_code","title","description","link","image_link","additional_image_link","price","condition","vin","brand","model","year","trim","mileage","color","body_style","vehicle_fulfillment(option:store_code)","google_product_category","availability"]
+COLS=["id","store_code","title","description","link","link_template","image_link","additional_image_link","price","condition","vin","brand","model","year","trim","mileage","color","body_style","vehicle_fulfillment(option:store_code)","google_product_category","availability"]
 def row(c):
-    return {"id":c["vin"],"store_code":STORE,"title":f"{c['year']} {c['make']} {c['model']} {c['trim']}".strip()[:150],"description":desc(c),"link":c["link"],
+    return {"id":c["vin"],"store_code":STORE,"title":f"{c['year']} {c['make']} {c['model']} {c['trim']}".strip()[:150],"description":desc(c),"link":c["link"],"link_template":c["link"]+("&" if "?" in c["link"] else "?")+"store={store_code}",
      "image_link":c["images"][0],"additional_image_link":",".join(c["images"][1:11]),"price":f"{c['price']}.00 USD","condition":c["condition"],"vin":c["vin"],
      "brand":c["make"],"model":c["model"],"year":c["year"],"trim":c["trim"],"mileage":f"{c['mileage']} miles","color":c["color"],"body_style":c["body"],
      "vehicle_fulfillment(option:store_code)":f"in_store:{STORE}","google_product_category":"916","availability":"in_stock"}

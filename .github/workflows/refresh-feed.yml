@@ -50,6 +50,15 @@ jobs:
           if n < 5:
               sys.exit(f"Refusing to publish: only {n} vehicles (need >= 5)")
 
+          ns = "http://base.google.com/ns/1.0"
+          missing_lt = []
+          for item in items:
+              lt = item.findtext(f"{{{ns}}}link_template") or ""
+              if "{store_code}" not in lt or not lt.startswith("http"):
+                  missing_lt.append(item.findtext(f"{{{ns}}}id") or "?")
+          if missing_lt:
+              sys.exit(f"Missing or invalid link_template on {len(missing_lt)} items: {', '.join(missing_lt[:5])}")
+
           docs = Path("docs")
           docs.mkdir(exist_ok=True)
           shutil.copyfile(xml_path, docs / "vehicle_feed.xml")
